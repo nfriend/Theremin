@@ -64,6 +64,9 @@ html, body {
 	border: 2px solid black;
 	border-left: 0px;
 	-webkit-transform: rotateY(180deg);
+    top: 30px;
+    height: 105px;
+    width: 50px;
 }
 
 .flip-trigger p {
@@ -77,8 +80,8 @@ html, body {
 
 .flip-back-trigger p {
 	-webkit-transform: rotate(90deg);
-	margin-top: 94px;
-	margin-left: -90px;
+	margin-top: 98px;
+	margin-left: -70px;
 }
 
 .flip-trigger p i {
@@ -188,7 +191,7 @@ html, body {
 	margin-top:-29px;
 	border-left: 9px solid transparent;
 	border-right: 9px solid transparent;
-	border-bottom: 9px solid #E3E3DC;
+	border-bottom: 9px solid #F8F8F0;
 }
 
 #about:hover #about-popover {
@@ -228,6 +231,11 @@ html, body {
 	background-color: #222222;
 	border-radius: 5px;
 	padding-top: 250px;
+}
+
+.back-container .mini-keyboard-container {
+    padding-top: 10px;
+    padding-bottom: 40px;
 }
 
 .keyboard-settings-container {
@@ -357,35 +365,35 @@ html, body {
 	pointer-events: all;
 }
 
-.white-key:hover {
+.front-container .white-key:hover {
 	background: -webkit-gradient(radial, center 30, 10, center center, 160, from(#FFFFF0), to(#AAAAAA));
 }
 
-.black-key:hover {
+.front-container .black-key:hover {
 	background: -webkit-gradient(radial, center 15, 10, center center, 160, from(#444444), to(#000000));
 }
 
-.white-key.selected {
+.front-container .white-key.selected {
 	background: -webkit-gradient(radial, center 30, 10, center center, 160, from(#7EF293), to(#4F9448));
 }
 
-.black-key.selected {
+.front-container .black-key.selected {
 	background: -webkit-gradient(radial, center 15, 10, center center, 160, from(#3C8248), to(#195C25));
 }
 
-.small-white-key:hover {
+.front-container .small-white-key:hover {
 	background: -webkit-gradient(radial, center 15, 5, center center, 80, from(#FFFFF0), to(#AAAAAA));
 }
 
-.small-white-key.selected {
+.front-container .small-white-key.selected {
 	background: -webkit-gradient(radial, center 15, 10, center center, 80, from(#7EF293), to(#4F9448));
 }
 
-.small-black-key:hover {
+.front-container .small-black-key:hover {
 	background: -webkit-gradient(radial, center 7, 10, center center, 50, from(#444444), to(#000000));
 }
 
-.small-black-key.selected {
+.front-container .small-black-key.selected {
 	background: -webkit-gradient(radial, center 7, 10, center center, 50, from(#3C8248), to(#195C25));
 }
 
@@ -433,11 +441,25 @@ html, body {
 	display: none;
 }
 
+.back-range-selector {
+	border: solid 2px #005500;
+	position: absolute;
+	width: 177.5px;
+	left: 637.25px;
+	height: 108px;
+	top: 8px;
+	background: -webkit-gradient(radial, center center, 50, center center, 250, from(rgba(0,100,0,.1)), to(rgba(0,100,0,.2)));
+	margin-right: 22.5px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	cursor: pointer;
+}
+
 .setable-range-selector * {
 	pointer-events: all;
 }
 
-.setable-range-selector .drag-header {
+.setable-range-selector .drag-header, .back-range-selector .drag-header {
 	pointer-events: all;
 	bottom: 0px;
 	width: 100%;
@@ -456,10 +478,14 @@ html, body {
 	top: 0px;
 	width: 100%;
 	height: 24px;
-	background: -webkit-linear-gradient(top, rgba(145,128,128,.6), rgba(145,128,128,.2));
+	background: -webkit-linear-gradient(top, rgba(128,128,145,.6), rgba(128,128,145,.2));
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
 	text-align: center;
 	padding-top: 3px;
 	color: lightgray;
+}
+
+.back-range-selector .drag-header {
+    background: -webkit-linear-gradient(top, rgba(128,145,128,.6), rgba(128,145,128,.2));
 }

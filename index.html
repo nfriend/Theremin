@@ -1,117 +1,136 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Theremin</title>
-		<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
-		<link href="lib/jquery-ui-1.10.3.custom/css/ui-lightness/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>
-		<link href="css/stylesheet.css" rel="stylesheet"/>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Theremin</title>
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="lib/jquery-ui-1.10.3.custom/css/ui-lightness/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <link href="css/stylesheet.css" rel="stylesheet" />
 
-		<script src="lib/jquery-2.0.3.min.js"></script>
-		<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
-		<script src="lib/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
-		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
-		<script src="js/theremin.js"></script>
-	</head>
-	<body>
-		<div class="title-container">
-			<h1 style="font-size: 4.5em;">Theremin</h1>
-			<h1 id="about" style="font-size: 2em;">about
-			<div id="about-popover">
-				<div class="arrow-up-outside"></div>
-				<div class="arrow-up-inside"></div>
-				<p style="font-weight: bold">Designed and developed by Nathan Friend</p>
-				<hr style="margin:0; margin-bottom:10px" />				
-				<p>Technologies used:
-					<ul>
-						<li>Leap Motion JavaScript API</li>
-						<li>Web Audio API</li>
-						<li>jQuery</li>
-						<li>jQuery UI</li>
-						<li>Bootstrap</li>
-					</ul>
-				</p>
-			</div></h1>
-		</div>
-		<div style="clear:both"></div>
-		<div class="main-container">
-			<div class="flip-container">
-				<div class="flip-card">
-					<div class="front-container">
-						<div class="keyboard-settings-container">
-							<div class="select-by-scale-button btn btn-primary" style="float:left; margin-right: 10px;">
-								Select by scale:
-							</div>
-							<select class="scale-note-select" style="float:left; margin-right: 10px; width:110px;">
-								<option value="chromatic">Chromatic</option>
-								<option value="0" selected>C</option>
-								<option value="1">C♯ / D♭</option>
-								<option value="2">D</option>
-								<option value="3">D# / E♭</option>
-								<option value="4">E</option>
-								<option value="5">F</option>
-								<option value="6">F# / G♭</option>
-								<option value="7">G</option>
-								<option value="8">G# / A♭</option>
-								<option value="9">A</option>
-								<option value="10">A# / B♭</option>
-								<option value="11">B</option>
-							</select>
-							<select class="scale-mode-select" style="float:left; width: 145px;">
-								<option value="major">major</option>
-								<option value="hminor" selected>harmonic minor</option>
-								<option value="nminor">natural minor</option>
-								<option value="mminor">melodic minor</option>
-								<option value="pentatonic">pentatonic</option>
+    <script src="lib/jquery-2.0.3.min.js"></script>
+    <script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+    <script src="lib/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/theremin.js"></script>
+</head>
+<body>
+    <div class="title-container">
+        <h1 style="font-size: 4.5em;">Theremin</h1>
+        <h1 id="about" style="font-size: 2em;">about
+		
+            <div id="about-popover">
+                <div class="arrow-up-outside"></div>
+                <div class="arrow-up-inside"></div>
+                <p style="font-weight: bold">Designed and developed by Nathan Friend</p>
+                <hr style="margin: 0; margin-bottom: 10px" />
+                <p>
+                    Technologies used:
+				
+                    <ul>
+                        <li>Leap Motion JavaScript API</li>
+                        <li>Web Audio API</li>
+                        <li>jQuery</li>
+                        <li>jQuery UI</li>
+                        <li>Bootstrap</li>
+                    </ul>
+                </p>
+            </div>
+        </h1>
+    </div>
+    <div style="clear: both"></div>
+    <div class="main-container">
+        <div class="flip-container">
+            <div class="flip-card">
+                <div class="front-container">
+                    <div class="keyboard-settings-container">
+                        <div class="select-by-scale-button btn btn-primary" style="float: left; margin-right: 10px;">
+                            Select by scale:
+						
+                        </div>
+                        <select class="scale-note-select" style="float: left; margin-right: 10px; width: 110px;">
+                            <option value="chromatic">Chromatic</option>
+                            <option value="0" selected>C</option>
+                            <option value="1">C♯ / D♭</option>
+                            <option value="2">D</option>
+                            <option value="3">D# / E♭</option>
+                            <option value="4">E</option>
+                            <option value="5">F</option>
+                            <option value="6">F# / G♭</option>
+                            <option value="7">G</option>
+                            <option value="8">G# / A♭</option>
+                            <option value="9">A</option>
+                            <option value="10">A# / B♭</option>
+                            <option value="11">B</option>
+                        </select>
+                        <select class="scale-mode-select" style="float: left; width: 145px;">
+                            <option value="major">major</option>
+                            <option value="hminor" selected>harmonic minor</option>
+                            <option value="nminor">natural minor</option>
+                            <option value="mminor">melodic minor</option>
+                            <option value="pentatonic">pentatonic</option>
 
-							</select>
-							<div class="btn-group select-deselect" style="float:right; margin-left: 30px;">
-								<button type="button" class="btn btn-primary select-all-button">
-									Select all
-								</button>
-								<button type="button" class="btn btn-primary deselect-all-button">
-									Deselect all
-								</button>
-							</div>
-							<div class='expand-tab'>
-								<p>
-									Auto select <i class="icon-play icon-white"></i>
-								</p>
-							</div>
-						</div>
-						<div class="setable-range-selector-spacer"></div>
-						<div class="mini-keyboard-container">
-							<div class="small-white-key-container"></div>
-							<div class="small-black-key-container"></div>
-							<div class="range-selector">
-								<div class="drag-header">
-									Viewport
-								</div>
-							</div>
-							<div class="setable-range-selector">
-								<div class="drag-header">
-									Select by scale range
-								</div>
-							</div>
-						</div>
-						<div class="white-key-container"></div>
-						<div class="black-key-container"></div>
-					</div>
-					<div class="back-container">
-						here' some text just to test
-					</div>
-					<div class="flip-trigger">
-						<p>
-							Continuous mode <i class="icon-share-alt icon-white"></i>
-						</p>
-					</div>
-					<div class="flip-trigger flip-back-trigger">
-						<p>
-							Quantisized mode <i class="icon-share-alt icon-white"></i>
-						</p>
-					</div>
+                        </select>
+                        <div class="btn-group select-deselect" style="float: right; margin-left: 30px;">
+                            <button type="button" class="btn btn-primary select-all-button">
+                                Select all
+							
+                            </button>
+                            <button type="button" class="btn btn-primary deselect-all-button">
+                                Deselect all
+							
+                            </button>
+                        </div>
+                        <div class='expand-tab'>
+                            <p>
+                                Auto select <i class="icon-play icon-white"></i>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="setable-range-selector-spacer"></div>
+                    <div class="mini-keyboard-container">
+                        <div class="small-white-key-container"></div>
+                        <div class="small-black-key-container"></div>
+                        <div class="range-selector">
+                            <div class="drag-header">
+                                Viewport
+							
+                            </div>
+                        </div>
+                        <div class="setable-range-selector">
+                            <div class="drag-header">
+                                Select by scale range
+							
+                            </div>
+                        </div>
+                    </div>
+                    <div class="white-key-container"></div>
+                    <div class="black-key-container"></div>
+                </div>
+                <div class="back-container">
+                    <div class="mini-keyboard-container">
+                        <div class="small-white-key-container"></div>
+                        <div class="small-black-key-container"></div>
+                        <div class="back-range-selector">
+                            <div class="drag-header">
+                                Select range
+							
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-trigger">
+                    <p>
+                        Continuous mode <i class="icon-share-alt icon-white"></i>
+                    </p>
+                </div>
+                <div class="flip-trigger flip-back-trigger">
+                    <p>
+                        Quantisized<br />&nbsp;&nbsp;&nbsp;&nbsp;mode <i class="icon-share-alt icon-white"></i>
+                    </p>
+                </div>
 
-				</div>
-			</div>
-		</div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
