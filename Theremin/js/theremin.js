@@ -222,172 +222,323 @@
             }
         });
 
+        $('#initialModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+
+        $('#show-demo-video').click(function () {
+            window.location = 'http://youtu.be/J5wW4-yr6zY';
+        });
+
+        $('#let-me-play').click(function () {
+            beginAudio();
+        });
+
         generateKeyboard(3);
 
         var paused = false;
 
-        var context = new webkitAudioContext();
-        var gainNodeMain = context.createGain();
-        var gainNode1 = context.createGain();
-        gainNode1.connect(gainNodeMain);
-        gainNode1.gain.value = 1;
-        var gainNode2 = context.createGain();
-        gainNode2.connect(gainNodeMain);
-        gainNode2.gain.value = 0;
-        var gainNode3 = context.createGain();
-        gainNode3.connect(gainNodeMain);
-        gainNode3.gain.value = 0;
-        var oscillators = getNewOscillators();
-        var lastFrequency = 440;
-        gainNodeMain.connect(context.destination);
-        var vibratoAngle = 0;
+        function beginAudio() {
 
-        for (var i = 0; i < oscillators.length; i++) {
-            oscillators[i].start(0);
-        }
+            var context = new webkitAudioContext();
+            var gainNodeMain = context.createGain();
+            var gainNode1 = context.createGain();
+            gainNode1.connect(gainNodeMain);
+            gainNode1.gain.value = 1;
+            var gainNode2 = context.createGain();
+            gainNode2.connect(gainNodeMain);
+            gainNode2.gain.value = 0;
+            var gainNode3 = context.createGain();
+            gainNode3.connect(gainNodeMain);
+            gainNode3.gain.value = 0;
+            var oscillators = getNewOscillators();
+            var lastFrequency = 440;
+            gainNodeMain.connect(context.destination);
+            var vibratoAngle = 0;
 
-
-        var controllerOptions = {
-            enableGestures: false
-        }
-
-        Leap.loop(controllerOptions, function (frame) {
-            if (paused) {
-                if (oscillators !== null) {
-                    for (var i = 0; i < oscillators.length; i++) {
-                        oscillators[i].stop(0);
-                    }
-
-                }
-                return;
+            for (var i = 0; i < oscillators.length; i++) {
+                oscillators[i].start(0);
             }
 
-            if (frame.pointables.length === 0) {
-                if (oscillators) {
-                    for (var i = 0; i < oscillators.length; i++) {
-                        oscillators[i].stop(0);
-                        oscillators[i].disconnect();
-                    }
-
-                    oscillators = null;
-                }
-                return;
-            } else {
-                if (!oscillators) {
-                    oscillators = getNewOscillators();
-                    for (var i = 0; i < oscillators.length; i++) {
-                        oscillators[i].start(0);
-                    }
-                }
+            var controllerOptions = {
+                enableGestures: false
             }
 
-            var hand1, hand2;
-            var vibratoFactor = 0;
-            var vibratoSpeed = 0;
-            var vibrato = 0;
-
-            if (frame.hands.length > 1) {
-                hand2 = frame.hands[1];
-                vibratoFactor = (Math.abs(hand2.palmPosition[1])) / 20;
-                vibratoSpeed = .95 - (Math.abs(hand2.palmPosition[2]) / 750);
-
-                vibrato = Math.sin(vibratoAngle);
-                vibratoAngle = (vibratoAngle + vibratoSpeed) % (Math.PI * 2);
-            } else {
-
-            }
-
-            if (frame.hands.length > 0) {
-                hand1 = frame.hands[0];
-
-                var volume = hand1.palmPosition[2] / 300;
-                volume = volume > 1 ? 1 : volume;
-                volume = volume < 0 ? 0 : volume;
-                volume = 1 - volume;
-                gainNodeMain.gain.value = volume;
-
-                if (window.mode === "quantisized") {
-                    var frequency = snapToScale(hand1.palmPosition[1]);
+            var json = JSON.stringify(Leap, function (key, value) {
+                if (typeof value === 'function') {
+                    return value.toString();
                 } else {
-                    var frequency = translateToRange(hand1.palmPosition[1]);
+                    return value;
+                }
+            });
+
+            Leap.loop(controllerOptions, function (frame) {
+                if (paused) {
+                    if (oscillators !== null) {
+                        for (var i = 0; i < oscillators.length; i++) {
+                            oscillators[i].stop(0);
+                        }
+
+                    }
+                    return;
                 }
 
-                var frequencyWithVibrato = frequency * ((100 + vibratoFactor * vibrato) / 100);
+                if (frame.pointables.length === 0) {
+                    if (oscillators) {
+                        for (var i = 0; i < oscillators.length; i++) {
+                            oscillators[i].stop(0);
+                            oscillators[i].disconnect();
+                        }
 
-                var toneDifference = hand1.palmNormal[0] / 15;
-                if (hand1.palmNormal >= 0) {
-                    gainNode2.gain.value = 0;
-                    gainNode1.gain.value = 1 - (toneDifference * 15);
-                    gainNode3.gain.value = toneDifference;
+                        oscillators = null;
+                    }
+                    return;
                 } else {
-                    gainNode3.gain.value = 0;
-                    gainNode1.gain.value = 1 - (toneDifference * 10);
-                    gainNode2.gain.value = toneDifference;
+                    if (!oscillators) {
+                        oscillators = getNewOscillators();
+                        for (var i = 0; i < oscillators.length; i++) {
+                            oscillators[i].start(0);
+                        }
+                    }
                 }
 
+                var hand1, hand2;
+                var vibratoFactor = 0;
+                var vibratoSpeed = 0;
+                var vibrato = 0;
 
-                for (var i = 0; i < oscillators.length; i++) {
-                    oscillators[i].frequency.value = frequencyWithVibrato;
+                if (frame.hands.length > 1) {
+                    hand2 = frame.hands[1];
+                    vibratoFactor = (Math.abs(hand2.palmPosition[1])) / 20;
+                    vibratoSpeed = .95 - (Math.abs(hand2.palmPosition[2]) / 500);
+
+                    vibrato = Math.sin(vibratoAngle);
+                    vibratoAngle = (vibratoAngle + vibratoSpeed) % (Math.PI * 2);
+                } else {
+
                 }
-                lastFrequency = frequency;
+
+                if (frame.hands.length > 0) {
+                    hand1 = frame.hands[0];
+
+                    var volume = hand1.palmPosition[2] / 300;
+                    volume = volume > 1 ? 1 : volume;
+                    volume = volume < 0 ? 0 : volume;
+                    volume = 1 - volume;
+                    gainNodeMain.gain.value = volume;
+
+                    if (window.mode === "quantisized") {
+                        var frequency = snapToScale(hand1.palmPosition[1]);
+                    } else {
+                        var frequency = translateToRange(hand1.palmPosition[1]);
+                    }
+
+                    var frequencyWithVibrato = frequency * ((100 + vibratoFactor * vibrato) / 100);
+
+                    var toneDifference = hand1.palmNormal[0] / 15;
+                    if (hand1.palmNormal >= 0) {
+                        gainNode2.gain.value = 0;
+                        gainNode1.gain.value = 1 - (toneDifference * 15);
+                        gainNode3.gain.value = toneDifference;
+                    } else {
+                        gainNode3.gain.value = 0;
+                        gainNode1.gain.value = 1 - (toneDifference * 10);
+                        gainNode2.gain.value = toneDifference;
+                    }
+
+
+                    for (var i = 0; i < oscillators.length; i++) {
+                        oscillators[i].frequency.value = frequencyWithVibrato;
+                    }
+                    lastFrequency = frequency;
+                }
+            });
+
+
+            function getNewOscillators() {
+                var oscillator1 = context.createOscillator();
+                oscillator1.connect(gainNode1);
+                oscillator1.type = 0;
+                oscillator1.frequency.value = lastFrequency;
+
+                var oscillator2 = context.createOscillator();
+                oscillator2.connect(gainNode2);
+                oscillator2.type = 1;
+                oscillator2.frequency.value = lastFrequency;
+
+                var oscillator3 = context.createOscillator();
+                oscillator3.connect(gainNode3);
+                oscillator3.type = 2;
+                oscillator3.frequency.value = lastFrequency;
+
+                return [oscillator1, oscillator2, oscillator3];
             }
-        });
 
-        function getNewOscillators() {
-            var oscillator1 = context.createOscillator();
-            oscillator1.connect(gainNode1);
-            oscillator1.type = 0;
-            oscillator1.frequency.value = lastFrequency;
+            function snapToScale(handPosition) {
+                if (!window.frequencyStepTranslation || frequencyStepTranslation.length === 0) {
+                    return handPosition * 2.5;
+                }
 
-            var oscillator2 = context.createOscillator();
-            oscillator2.connect(gainNode2);
-            oscillator2.type = 1;
-            oscillator2.frequency.value = lastFrequency;
+                for (var i = 0; i < window.frequencyStepTranslation.length; i++) {
+                    if (handPosition < window.frequencyStepTranslation[i][1]) {
+                        return window.frequencyStepTranslation[i][0];
+                    }
+                }
 
-            var oscillator3 = context.createOscillator();
-            oscillator3.connect(gainNode3);
-            oscillator3.type = 2;
-            oscillator3.frequency.value = lastFrequency;
+                return window.frequencyStepTranslation[window.frequencyStepTranslation.length - 1][0];
+            }
 
-            return [oscillator1, oscillator2, oscillator3];
-        }
+            function translateToRange(handPosition) {
+                if (!window.continuousRange) {
+                    return handPosition * 2.5;
+                } else {
+                    if (handPosition < 50) {
+                        handPosition = 50;
+                    }
+                    if (handPosition > 500) {
+                        handPosition = 500;
+                    }
 
-        function l(msg) {
-            $("#log").html(msg + "\n")
-        }
 
-        function snapToScale(handPosition) {
-            if (!window.frequencyStepTranslation || frequencyStepTranslation.length === 0) {
+                    return ((handPosition - 50) / 450) * (window.continuousRange[1] - window.continuousRange[0]) + window.continuousRange[0];
+                }
+
                 return handPosition * 2.5;
             }
 
-            for (var i = 0; i < window.frequencyStepTranslation.length; i++) {
-                if (handPosition < window.frequencyStepTranslation[i][1]) {
-                    return window.frequencyStepTranslation[i][0];
+            function selectMainKeys(overrideOptimization) {
+                var octaveMultiplier = Math.floor($(".range-selector").position().left / (22.4375 * 7));
+                if (!overrideOptimization) {
+                    if (selectMainKeys.lastOctaveMultiplier !== undefined && selectMainKeys.lastOctaveMultiplier === octaveMultiplier) {
+                        return;
+                    }
                 }
+
+                selectMainKeys.lastOctaveMultiplier = octaveMultiplier;
+
+                if (!window.frequencyStepTranslation || window.frequencyStepTranslation.length === 0) {
+                    $(".key").removeClass("selected");
+                    return;
+                }
+
+                $(".key").each(function () {
+                    var $this = $(this);
+                    var frequencyReference = parseFloat($this.attr("frequencyReference"), 10);
+                    var octaveReference = parseInt($this.attr("octaveReference"), 10) + 1;
+                    var frequency = frequencyReference * Math.pow(2, (octaveReference + octaveMultiplier) - 1);
+
+                    var frequencyWasFound = false;
+                    for (var i = 0; i < window.frequencyStepTranslation.length; i++) {
+                        if (window.frequencyStepTranslation[i][0] === frequency) {
+                            frequencyWasFound = true;
+                            if (!$this.hasClass("selected")) {
+                                $this.addClass("selected");
+                            }
+                        }
+                    }
+
+                    if (!frequencyWasFound) {
+                        $this.removeClass("selected");
+                    }
+                });
             }
 
-            return window.frequencyStepTranslation[window.frequencyStepTranslation.length - 1][0];
-        }
+            function selectScale(startingKey, pattern) {
+                var keyPointer = (12 - startingKey) % 12;
+                var whiteKeyToggle = true;
+                var whiteIndex = 1;
+                var blackIndex = 1;
 
-        function translateToRange(handPosition) {
-            if (!window.continuousRange) {
-                return handPosition * 2.5;
-            } else {
-                if (handPosition < 50) {
-                    handPosition = 50;
+                var startIndex = Math.round($(".setable-range-selector").position().left / 22.4375);
+                var distance = Math.round($(".setable-range-selector").width() / 22.4375);
+
+                if ($(".setable-range-selector").css("display") === "none") {
+                    startIndex = 0;
+                    distance = 1000;
                 }
-                if (handPosition > 500) {
-                    handPosition = 500;
+
+                console.log(startIndex + ", " + distance);
+
+                for (var i = 0; i < 99; i++) {
+                    if (whiteKeyToggle) {
+                        var $this = $(".small-white-key-container .small-white-key:nth-child(" + whiteIndex + ")");
+                        if (whiteIndex > startIndex + distance) {
+                            $this.removeClass("selected");
+                            keyPointer = (keyPointer + 1) % 12;
+                            whiteIndex++;
+                            whiteKeyToggle = !whiteKeyToggle;
+                            continue;
+                        }
+                        if (whiteIndex > startIndex) {
+                            if (pattern[keyPointer]) {
+                                if (!$this.hasClass("selected")) {
+                                    $this.addClass("selected");
+                                }
+                            } else {
+                                $this.removeClass("selected");
+                            }
+                        } else {
+                            $this.removeClass("selected");
+                        }
+                        keyPointer = (keyPointer + 1) % 12;
+                        whiteIndex++;
+                    } else {
+                        var $this = $(".small-black-key-container .small-black-key:nth-child(" + blackIndex + ")");
+                        if ($this.css("visibility") !== "hidden") {
+                            if (whiteIndex > startIndex + distance) {
+                                $this.removeClass("selected");
+                                keyPointer = (keyPointer + 1) % 12;
+                                blackIndex++;
+                                whiteKeyToggle = !whiteKeyToggle;
+                                continue;
+                            }
+                            if (whiteIndex > startIndex + 1) {
+                                if (pattern[keyPointer]) {
+                                    if (!$this.hasClass("selected")) {
+                                        $this.addClass("selected");
+                                    }
+                                } else {
+                                    $this.removeClass("selected");
+                                }
+                            } else {
+                                $this.removeClass("selected");
+                            }
+                            keyPointer = (keyPointer + 1) % 12;
+                        }
+                        blackIndex++;
+                    }
+
+                    whiteKeyToggle = !whiteKeyToggle;
                 }
 
-
-                return ((handPosition - 50) / 450) * (window.continuousRange[1] - window.continuousRange[0]) + window.continuousRange[0];
+                recalculatefrequencyStepTranslation();
+                selectMainKeys(true);
             }
-
-            return handPosition * 2.5;
         }
 
+        function recalculatefrequencyStepTranslation() {
+            window.frequencyStepTranslation = [];
+
+            var selectedFrequencies = [];
+
+            $(".small-key").each(function (index) {
+                var $this = $(this);
+                if ($this.is(".selected")) {
+                    selectedFrequencies.push(parseFloat($this.attr("frequencyReference"), 10));
+                }
+            });
+
+            selectedFrequencies.sort(function (a, b) {
+                return a - b;
+            });
+
+            var low = 50;
+            var high = 500;
+            for (var i = 0; i < selectedFrequencies.length; i++) {
+                window.frequencyStepTranslation.push([selectedFrequencies[i], ((high - low) / selectedFrequencies.length) * (i + 1) + low]);
+            }
+        }
 
         function generateKeyboard(octaveCount) {
             $(".white-key-container, .black-key-container, .mini-keyboard-container, .setable-range-selector-spacer").css({
@@ -445,67 +596,6 @@
             }
         }
 
-        function selectMainKeys(overrideOptimization) {
-            var octaveMultiplier = Math.floor($(".range-selector").position().left / (22.4375 * 7));
-            if (!overrideOptimization) {
-                if (selectMainKeys.lastOctaveMultiplier !== undefined && selectMainKeys.lastOctaveMultiplier === octaveMultiplier) {
-                    return;
-                }
-            }
-
-            selectMainKeys.lastOctaveMultiplier = octaveMultiplier;
-
-            if (!window.frequencyStepTranslation || window.frequencyStepTranslation.length === 0) {
-                $(".key").removeClass("selected");
-                return;
-            }
-
-            $(".key").each(function () {
-                var $this = $(this);
-                var frequencyReference = parseFloat($this.attr("frequencyReference"), 10);
-                var octaveReference = parseInt($this.attr("octaveReference"), 10) + 1;
-                var frequency = frequencyReference * Math.pow(2, (octaveReference + octaveMultiplier) - 1);
-
-                var frequencyWasFound = false;
-                for (var i = 0; i < window.frequencyStepTranslation.length; i++) {
-                    if (window.frequencyStepTranslation[i][0] === frequency) {
-                        frequencyWasFound = true;
-                        if (!$this.hasClass("selected")) {
-                            $this.addClass("selected");
-                        }
-                    }
-                }
-
-                if (!frequencyWasFound) {
-                    $this.removeClass("selected");
-                }
-            });
-        }
-
-        function recalculatefrequencyStepTranslation() {
-            window.frequencyStepTranslation = [];
-
-            var selectedFrequencies = [];
-
-            $(".small-key").each(function (index) {
-                var $this = $(this);
-                if ($this.is(".selected")) {
-                    selectedFrequencies.push(parseFloat($this.attr("frequencyReference"), 10));
-                }
-            });
-
-            selectedFrequencies.sort(function (a, b) {
-                return a - b;
-            });
-
-            var low = 50;
-            var high = 500;
-            for (var i = 0; i < selectedFrequencies.length; i++) {
-                window.frequencyStepTranslation.push([selectedFrequencies[i], ((high - low) / selectedFrequencies.length) * (i + 1) + low]);
-            }
-            //alert(JSON.stringify(window.frequencyStepTranslation));
-        }
-
         function computeContinuousRange() {
 
             var startIndex = Math.round($(".back-range-selector").position().left / 22.4375);
@@ -521,78 +611,31 @@
             console.log("new window.contiuousrange: " + JSON.stringify(window.continuousRange));
         }
 
-        function selectScale(startingKey, pattern) {
-            var keyPointer = (12 - startingKey) % 12;
-            var whiteKeyToggle = true;
-            var whiteIndex = 1;
-            var blackIndex = 1;
-
-            var startIndex = Math.round($(".setable-range-selector").position().left / 22.4375);
-            var distance = Math.round($(".setable-range-selector").width() / 22.4375);
-
-            if ($(".setable-range-selector").css("display") === "none") {
-                startIndex = 0;
-                distance = 1000;
-            }
-
-            console.log(startIndex + ", " + distance);
-
-            for (var i = 0; i < 99; i++) {
-                if (whiteKeyToggle) {
-                    var $this = $(".small-white-key-container .small-white-key:nth-child(" + whiteIndex + ")");
-                    if (whiteIndex > startIndex + distance) {
-                        $this.removeClass("selected");
-                        keyPointer = (keyPointer + 1) % 12;
-                        whiteIndex++;
-                        whiteKeyToggle = !whiteKeyToggle;
-                        continue;
-                    }
-                    if (whiteIndex > startIndex) {
-                        if (pattern[keyPointer]) {
-                            if (!$this.hasClass("selected")) {
-                                $this.addClass("selected");
-                            }
-                        } else {
-                            $this.removeClass("selected");
-                        }
-                    } else {
-                        $this.removeClass("selected");
-                    }
-                    keyPointer = (keyPointer + 1) % 12;
-                    whiteIndex++;
-                } else {
-                    var $this = $(".small-black-key-container .small-black-key:nth-child(" + blackIndex + ")");
-                    if ($this.css("visibility") !== "hidden") {
-                        if (whiteIndex > startIndex + distance) {
-                            $this.removeClass("selected");
-                            keyPointer = (keyPointer + 1) % 12;
-                            blackIndex++;
-                            whiteKeyToggle = !whiteKeyToggle;
-                            continue;
-                        }
-                        if (whiteIndex > startIndex + 1) {
-                            if (pattern[keyPointer]) {
-                                if (!$this.hasClass("selected")) {
-                                    $this.addClass("selected");
-                                }
-                            } else {
-                                $this.removeClass("selected");
-                            }
-                        } else {
-                            $this.removeClass("selected");
-                        }
-                        keyPointer = (keyPointer + 1) % 12;
-                    }
-                    blackIndex++;
-                }
-
-                whiteKeyToggle = !whiteKeyToggle;
-            }
-
-            recalculatefrequencyStepTranslation();
-            selectMainKeys(true);
+        function l(msg) {
+            $("#log").html(msg + "\n")
         }
 
     }
 
 })();
+
+// from http://stackoverflow.com/a/2401861/1063392
+navigator.sayswho = (function () {
+    var ua = navigator.userAgent, tem,
+    M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+    if (/trident/i.test(M[1])) {
+        tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+        return 'IE ' + (tem[1] || '');
+    }
+    if (M[1] === 'Chrome') {
+        tem = ua.match(/\bOPR\/(\d+)/)
+        if (tem != null) return 'Opera ' + tem[1];
+    }
+    M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+    if ((tem = ua.match(/version\/(\d+)/i)) != null) M.splice(1, 1, tem[1]);
+    return M.join(' ');
+})();
+
+if (!(navigator.sayswho.indexOf('Chrome') != -1)) {
+    window.location = 'unsupported-browser.html';
+}

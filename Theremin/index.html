@@ -6,9 +6,10 @@
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="lib/jquery-ui-1.10.3.custom/css/ui-lightness/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
     <link href="css/stylesheet.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
     <script src="lib/jquery-2.0.3.min.js"></script>
-    <script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+    <script src="lib/leap.min.js"></script>
     <script src="lib/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="js/theremin.js"></script>
@@ -16,8 +17,9 @@
 <body>
     <div class="title-container">
         <h1 style="font-size: 4.5em;">Theremin</h1>
-        <h1 id="about" style="font-size: 2em;">about
-		
+        <h1 id="about" style="font-size: 2em;">
+            about
+
             <div id="about-popover">
                 <div class="arrow-up-outside"></div>
                 <div class="arrow-up-inside"></div>
@@ -25,7 +27,7 @@
                 <hr style="margin: 0; margin-bottom: 10px" />
                 <p>
                     Technologies used:
-				
+
                     <ul>
                         <li>Leap Motion JavaScript API</li>
                         <li>Web Audio API</li>
@@ -45,7 +47,7 @@
                     <div class="keyboard-settings-container">
                         <div class="select-by-scale-button btn btn-primary" style="float: left; margin-right: 10px;">
                             Select by scale:
-						
+
                         </div>
                         <select class="scale-note-select" style="float: left; margin-right: 10px; width: 110px;">
                             <option value="chromatic">Chromatic</option>
@@ -73,11 +75,11 @@
                         <div class="btn-group select-deselect" style="float: right; margin-left: 30px;">
                             <button type="button" class="btn btn-primary select-all-button">
                                 Select all
-							
+
                             </button>
                             <button type="button" class="btn btn-primary deselect-all-button">
                                 Deselect all
-							
+
                             </button>
                         </div>
                         <div class='expand-tab'>
@@ -93,13 +95,13 @@
                         <div class="range-selector">
                             <div class="drag-header">
                                 Viewport
-							
+
                             </div>
                         </div>
                         <div class="setable-range-selector">
                             <div class="drag-header">
                                 Select by scale range
-							
+
                             </div>
                         </div>
                     </div>
@@ -113,7 +115,7 @@
                         <div class="back-range-selector">
                             <div class="drag-header">
                                 Select range
-							
+
                             </div>
                         </div>
                     </div>
@@ -133,5 +135,26 @@
             </div>
         </div>
     </div>
+
+    <!--#region modals-->
+    <!-- Modal -->
+    <div class="modal fade" id="initialModal" tabindex="-1" role="dialog" aria-labelledby="initialModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="initialModalLabel">Do you have what it takes?</h4>
+                </div>
+                <div class="modal-body">
+                    Theremin requires a <a href="https://www.leapmotion.com/">Leap Motion controller</a> to function.
+                    If you don't have one, check out the demo video to get an idea of how Theremin operates.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="show-demo-video">Show me the demo video</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" id="let-me-play">I have a controller, let me play!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#endregion-->
 </body>
 </html>
