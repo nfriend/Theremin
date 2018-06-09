@@ -19,7 +19,7 @@
                 recalculatefrequencyStepTranslation();
             },
             drag: function () {
-                selectMainKeys();
+                window.selectMainKeys();
             }
         });
 
@@ -66,7 +66,6 @@
                 for (var i = 0; i < window.smallWhiteKeyPositions.length; i++) {
                     if (Math.abs(window.smallWhiteKeyPositions[i] + 9 - left) > lastDifference) {
                         $this.css("left", window.smallWhiteKeyPositions[i - 1] + 9 + "px");
-                        console.log("left:" + (window.smallWhiteKeyPositions[i - 1] + 9 + "px") + ", left:");
                         break;
                     }
                     lastDifference = Math.abs(window.smallWhiteKeyPositions[i] - left);
@@ -74,8 +73,6 @@
 
                 var width = $this.width();
                 $this.width(22.4375 * Math.round(width / 22.4375) - 2);
-
-                console.log("width:" + (22.4375 * Math.round(width / 22.4375) - 2) + ", left:");
 
                 if (Math.round(width / 22.4375) < 3) {
                     $(".setable-range-selector .drag-header").html("");
@@ -103,7 +100,6 @@
                 for (var i = 0; i < window.smallWhiteKeyPositions.length; i++) {
                     if (Math.abs(window.smallWhiteKeyPositions[i] + 9 - left) > lastDifference) {
                         $this.css("left", window.smallWhiteKeyPositions[i - 1] + 9 + "px");
-                        console.log("left:" + (window.smallWhiteKeyPositions[i - 1] + 9 + "px") + ", left:");
                         break;
                     }
                     lastDifference = Math.abs(window.smallWhiteKeyPositions[i] - left);
@@ -111,8 +107,6 @@
 
                 var width = $this.width();
                 $this.width(22.4375 * Math.round(width / 22.4375) - 2);
-
-                console.log("width:" + (22.4375 * Math.round(width / 22.4375) - 2) + ", left:");
 
                 if (Math.round(width / 22.4375) < 3) {
                     $(".back-range-selector .drag-header").html("");
@@ -142,7 +136,7 @@
         $(".select-by-scale-button").click(function () {
             var beginningKey = $(".scale-note-select option:selected").val();
             if (beginningKey === "chromatic") {
-                selectScale(0, [true, true, true, true, true, true, true, true, true, true, true, true]);
+                window.selectScale(0, [true, true, true, true, true, true, true, true, true, true, true, true]);
                 return;
             }
 
@@ -168,7 +162,7 @@
                         pattern = [true, false, true, false, true, true, false, true, false, true, false, true];
                         break;
                 }
-                selectScale(parseInt(beginningKey, 10), pattern);
+                window.selectScale(parseInt(beginningKey, 10), pattern);
             }
         });
 
@@ -178,7 +172,7 @@
             });
 
             recalculatefrequencyStepTranslation();
-            selectMainKeys(true);
+            window.selectMainKeys(true);
         });
 
         $(".select-all-button").click(function () {
@@ -189,7 +183,7 @@
             });
 
             recalculatefrequencyStepTranslation();
-            selectMainKeys(true);
+            window.selectMainKeys(true);
         });
 
         $("body").click(function (e) {
@@ -215,7 +209,7 @@
                     $target.addClass("selected");
                 }
                 recalculatefrequencyStepTranslation();
-                selectMainKeys(true);
+                window.selectMainKeys(true);
             } else if ($target.is(".mode button")) {
                 $target.addClass("btn-success");
                 $(".mode button").not($target).removeClass("btn-success");
@@ -412,15 +406,15 @@
                 return handPosition * 2.5;
             }
 
-            function selectMainKeys(overrideOptimization) {
+            window.selectMainKeys = function(overrideOptimization) {
                 var octaveMultiplier = Math.floor($(".range-selector").position().left / (22.4375 * 7));
                 if (!overrideOptimization) {
-                    if (selectMainKeys.lastOctaveMultiplier !== undefined && selectMainKeys.lastOctaveMultiplier === octaveMultiplier) {
+                    if (window.selectMainKeys.lastOctaveMultiplier !== undefined && window.selectMainKeys.lastOctaveMultiplier === octaveMultiplier) {
                         return;
                     }
                 }
 
-                selectMainKeys.lastOctaveMultiplier = octaveMultiplier;
+                window.selectMainKeys.lastOctaveMultiplier = octaveMultiplier;
 
                 if (!window.frequencyStepTranslation || window.frequencyStepTranslation.length === 0) {
                     $(".key").removeClass("selected");
@@ -449,7 +443,7 @@
                 });
             }
 
-            function selectScale(startingKey, pattern) {
+            window.selectScale = function(startingKey, pattern) {
                 var keyPointer = (12 - startingKey) % 12;
                 var whiteKeyToggle = true;
                 var whiteIndex = 1;
@@ -462,8 +456,6 @@
                     startIndex = 0;
                     distance = 1000;
                 }
-
-                console.log(startIndex + ", " + distance);
 
                 for (var i = 0; i < 99; i++) {
                     if (whiteKeyToggle) {
@@ -518,7 +510,7 @@
                 }
 
                 recalculatefrequencyStepTranslation();
-                selectMainKeys(true);
+                window.selectMainKeys(true);
             }
         }
 
@@ -606,14 +598,10 @@
             var startIndex = Math.round($(".back-range-selector").position().left / 22.4375);
             var distance = Math.round($(".back-range-selector").width() / 22.4375);
 
-            console.log("startIndex: " + startIndex + ", distance: " + distance);
-
             var startFrequency = parseInt($(".back-container .small-white-key-container .small-white-key:nth-child(" + (startIndex + 1) + ")").attr("frequencyReference"), 10);
             var endFrequency = parseInt($(".back-container .small-white-key-container .small-white-key:nth-child(" + (startIndex + distance) + ")").attr("frequencyReference"), 10);
 
             window.continuousRange = [startFrequency, endFrequency];
-
-            console.log("new window.contiuousrange: " + JSON.stringify(window.continuousRange));
         }
 
         function l(msg) {
