@@ -241,7 +241,7 @@
 
         function beginAudio() {
 
-            var context = new webkitAudioContext();
+            var context = new AudioContext();
             var gainNodeMain = context.createGain();
             var gainNode1 = context.createGain();
             gainNode1.connect(gainNodeMain);
@@ -357,6 +357,11 @@
 
 
             function getNewOscillators() {
+
+                if (!lastFrequency) {
+                    lastFrequency = 440;
+                }
+
                 var oscillator1 = context.createOscillator();
                 oscillator1.connect(gainNode1);
                 oscillator1.type = 0;
