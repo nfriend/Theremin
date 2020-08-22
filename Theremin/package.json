@@ -2,5 +2,13 @@
   "name": "@nathanfriend/theremin",
   "version": "1.0.0",
   "description": "All build artifacts necessary to run Theremin",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/nfriend/Theremin.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/nfriend/Theremin/issues"
+  },
+  "homepage": "https://gitlab.com/nfriend/Theremin#readme"
 }
